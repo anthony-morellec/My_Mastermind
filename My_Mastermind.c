@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-
-#define NOT_NUMBER_OR_DUP_AV(AV, NB) (AV[1 + NB][0] < '0' || AV[1 + NB][0] > '8' || AV[1 + NB][1] < '0' || AV[1 + NB][1] > '8' || AV[1 + NB][2] < '0' || AV[1 + NB][2] > '8' || AV[1 + NB][3] < '0' || AV[1 + NB][3] > '8' || AV[1 + NB][0] == AV[1 + NB][1] || AV[1 + NB][0] == AV[1 + NB][2] || AV[1 + NB][0] == AV[1 + NB][3] || AV[1 + NB][1] == AV[1 + NB][2] || AV[1 + NB][1] == AV[1 + NB][3] || AV[1 + NB][2] == AV[1 + NB][3])
+#include <string.h>
+#define NOT_NUMBER_OR_DUP_CODE(AV, NB) (AV[1 + NB][0] < '0' || AV[1 + NB][0] > '8' || AV[1 + NB][1] < '0' || AV[1 + NB][1] > '8' || AV[1 + NB][2] < '0' || AV[1 + NB][2] > '8' || AV[1 + NB][3] < '0' || AV[1 + NB][3] > '8' || AV[1 + NB][0] == AV[1 + NB][1] || AV[1 + NB][0] == AV[1 + NB][2] || AV[1 + NB][0] == AV[1 + NB][3] || AV[1 + NB][1] == AV[1 + NB][2] || AV[1 + NB][1] == AV[1 + NB][3] || AV[1 + NB][2] == AV[1 + NB][3])
 #define NOT_NUMBER_OR_DUP_INPUT(INPUT) (input[4] != 0 || input[0] < '0' || input[0] > '8' || input[1] < '0' || input[1] > '8' || input[2] < '0' || input[2] > '8' || input[3] < '0' || input[3] > '8' || input[0] == input[1] || input[0] == input[2] || input[0] == input[3] || input[1] == input[2] || input[1] == input[3] || input[2] == input[3])
 
 int main(int ac, char **av) {
@@ -30,7 +30,7 @@ int main(int ac, char **av) {
                         return 0;
                     }
                     else {
-                        if (NOT_NUMBER_OR_DUP_AV(av, nb_param)) {
+                        if (NOT_NUMBER_OR_DUP_CODE(av, nb_param)) {
                             printf("Invalid code. please retry.\n");
                             return 0;
                         }
@@ -77,13 +77,18 @@ int main(int ac, char **av) {
         int wplaced = 0;
         int msplaced = 0;
         int valid = 0;
-
+        
         printf("---\nRound %d\n", round);
 
         while(valid != 1) {
+            input[0] = '1';
+            input[1] = '2';
+            input[2] = '3';
+            input[3] = '4';
             scanf("%4s", input);
+
             if (NOT_NUMBER_OR_DUP_INPUT(input)) {
-                printf("Invalid input. please retry.\n");
+                printf("Wrong input!\n");
             }
             else {
                 valid = 1;
