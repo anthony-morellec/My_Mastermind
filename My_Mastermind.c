@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <unistd.h>
-#include <string.h>
+
 #define NOT_NUMBER_OR_DUP_CODE(AV, NB) (AV[1 + NB][0] < '0' || AV[1 + NB][0] > '8' || AV[1 + NB][1] < '0' || AV[1 + NB][1] > '8' || AV[1 + NB][2] < '0' || AV[1 + NB][2] > '8' || AV[1 + NB][3] < '0' || AV[1 + NB][3] > '8' || AV[1 + NB][0] == AV[1 + NB][1] || AV[1 + NB][0] == AV[1 + NB][2] || AV[1 + NB][0] == AV[1 + NB][3] || AV[1 + NB][1] == AV[1 + NB][2] || AV[1 + NB][1] == AV[1 + NB][3] || AV[1 + NB][2] == AV[1 + NB][3])
 #define NOT_NUMBER_OR_DUP_INPUT(INPUT) (input[4] != 0 || input[0] < '0' || input[0] > '8' || input[1] < '0' || input[1] > '8' || input[2] < '0' || input[2] > '8' || input[3] < '0' || input[3] > '8' || input[0] == input[1] || input[0] == input[2] || input[0] == input[3] || input[1] == input[2] || input[1] == input[3] || input[2] == input[3])
 
@@ -88,10 +88,6 @@ int main(int ac, char **av) {
                 input_size--;
             }
             input[input_size] = '\0';
-            
-            // printf("input : %s\n", input);
-            // printf("input_size : %zd\n", input_size);
-            //scanf("%s", input);
 
             if (input[0] != '\0') {
                 if (NOT_NUMBER_OR_DUP_INPUT(input)) {
