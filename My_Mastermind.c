@@ -53,7 +53,13 @@ int main(int ac, char **av) {
                     return 0;
             }
         }
+        else {
+            printf("invalid option");
+            return 0;
+        }
+
         nb_param++;
+        
         if (nb_param == 2 && ac > 3) {
             nb_param = 3;
         }
@@ -64,7 +70,7 @@ int main(int ac, char **av) {
     
     if (code_created == 0) {
         for (int nbc_index = 0; nbc_index < 4; nbc_index++) {
-            while (nbc == code[0] || nbc == code[1] || nbc == code[2]) {
+            while (nbc == code[0] || nbc == code[1] || nbc == code[2] || nbc == 0) {
                 nbc = rand() % 9 + '0';
             }
             
