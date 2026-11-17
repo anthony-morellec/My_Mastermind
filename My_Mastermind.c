@@ -3,18 +3,43 @@
 #include <time.h>
 #include <unistd.h>
 
-#define NOT_NUMBER_OR_DUP_CODE(AV, NB) (AV[1 + NB][0] < '0' || AV[1 + NB][0] > '8' || AV[1 + NB][1] < '0' || AV[1 + NB][1] > '8' || AV[1 + NB][2] < '0' || AV[1 + NB][2] > '8' || AV[1 + NB][3] < '0' || AV[1 + NB][3] > '8' || AV[1 + NB][0] == AV[1 + NB][1] || AV[1 + NB][0] == AV[1 + NB][2] || AV[1 + NB][0] == AV[1 + NB][3] || AV[1 + NB][1] == AV[1 + NB][2] || AV[1 + NB][1] == AV[1 + NB][3] || AV[1 + NB][2] == AV[1 + NB][3])
-#define NOT_NUMBER_OR_DUP_INPUT(INPUT) (input[4] != 0 || input[0] < '0' || input[0] > '8' || input[1] < '0' || input[1] > '8' || input[2] < '0' || input[2] > '8' || input[3] < '0' || input[3] > '8' || input[0] == input[1] || input[0] == input[2] || input[0] == input[3] || input[1] == input[2] || input[1] == input[3] || input[2] == input[3])
+int NOT_NUMBER_OR_DUP(char* code, int ln_code) {
+    int check = 0;
+
+    if (code[ln_code] != 0) {
+        check++;
+    }
+
+    for (int index = 0; index < ln_code; index++) {
+        if (code[index] < '0' || code[index] > '8') {
+            check++;
+        }
+
+        for (int i = 0; i < index; i++) {
+            if (code[i] == code[index]) {
+                check++;
+            }
+        }
+    }
+
+    if (check > 0) {
+        return 0;
+    }
+
+    return 1;
+}
 
 int main(int ac, char **av) {
     srand(time(NULL));
+
+    int code_length = 4;
 
     int round = 0;
     int max_round = 10;
     
     char nbc = 0;
-    char code[5];
-    char input[5];
+    char code[code_length+1];
+    char input[code_length+1];
     int code_created = 0;
     int nb_param = 0;
 
@@ -26,17 +51,17 @@ int main(int ac, char **av) {
         if (av[0 + nb_param][0] == '-') {
             switch (av[0 + nb_param][1]) {
                 case 'c':
-                    if (av[1 + nb_param][4] != 0 ) {
+                    if (av[1 + nb_param][code_length] != 0 ) {
                         printf("Invalid code. please retry.\n");
                         return 0;
                     }
                     else {
-                        if (NOT_NUMBER_OR_DUP_CODE(av, nb_param)) {
+                        if (NOT_NUMBER_OR_DUP(av[1 + nb_param], code_length) != 1) {
                             printf("Invalid code. please retry.\n");
                             return 0;
                         }
                         else {
-                            for (int code_index = 0; code_index < 4; code_index++) {
+                            for (int code_index = 0; code_index < code_length; code_index++) {
                                 code[code_index] = av[1 + nb_param][code_index];
                             }
                             code_created = 1;
@@ -69,12 +94,13 @@ int main(int ac, char **av) {
     }
     
     if (code_created == 0) {
-        for (int nbc_index = 0; nbc_index < 4; nbc_index++) {
-            while (nbc == code[0] || nbc == code[1] || nbc == code[2] || nbc == 0) {
+        while(NOT_NUMBER_OR_DUP(code, code_length) != 1) {
+            for (int nbc_index = 0; nbc_index < code_length; nbc_index++) {
                 nbc = rand() % 9 + '0';
+
+                code[nbc_index] = nbc;
             }
-            
-            code[nbc_index] = nbc;
+            code[code_length] = '\0';
         }
     }
 
@@ -89,14 +115,14 @@ int main(int ac, char **av) {
         printf("---\nRound %d\n", round);
 
         while(valid != 1) {
-            input_size = read(0, input, 4);
+            input_size = read(0, input, code_length);
             if (input[input_size-1] == '\n') {
                 input_size--;
             }
             input[input_size] = '\0';
 
             if (input[0] != '\0') {
-                if (NOT_NUMBER_OR_DUP_INPUT(input)) {
+                if (NOT_NUMBER_OR_DUP(input, code_length) != 1) {
                     printf("Wrong input!\n");
                 }
                 else {
@@ -105,17 +131,17 @@ int main(int ac, char **av) {
             }
         }
         
-        for (int wplaced_index = 0; wplaced_index < 4; wplaced_index++) {
+        for (int wplaced_index = 0; wplaced_index < code_length; wplaced_index++) {
             if (code[wplaced_index] == input[wplaced_index]) {
                 wplaced++;
             }
-            for (int msplaced_index = 0; msplaced_index < 4; msplaced_index++) {
+            for (int msplaced_index = 0; msplaced_index < code_length; msplaced_index++) {
                 if (code[msplaced_index] == input[wplaced_index] && code[wplaced_index] != input[wplaced_index]) {
                     msplaced++;
                 }
             }
         }
-        if (wplaced == 4) {
+        if (wplaced == code_length) {
             printf("Congratz! You did it!");
             return 0;
         }
