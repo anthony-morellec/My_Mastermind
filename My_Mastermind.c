@@ -2,32 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <unistd.h>
-
-int NOT_NUMBER_OR_DUP(char* code, int ln_code) {
-    int check = 0;
-
-    if (code[ln_code] != 0) {
-        check++;
-    }
-
-    for (int index = 0; index < ln_code; index++) {
-        if (code[index] < '0' || code[index] > '8') {
-            check++;
-        }
-
-        for (int i = 0; i < index; i++) {
-            if (code[i] == code[index]) {
-                check++;
-            }
-        }
-    }
-
-    if (check > 0) {
-        return 0;
-    }
-
-    return 1;
-}
+#include "mastermind.h"
 
 int main(int ac, char **av) {
     srand(time(NULL));
@@ -56,7 +31,7 @@ int main(int ac, char **av) {
                         return 0;
                     }
                     else {
-                        if (NOT_NUMBER_OR_DUP(av[1 + nb_param], code_length) != 1) {
+                        if (not_number_or_dup(av[1 + nb_param], code_length) != 1) {
                             printf("Invalid code. please retry.\n");
                             return 0;
                         }
@@ -94,7 +69,7 @@ int main(int ac, char **av) {
     }
     
     if (code_created == 0) {
-        while(NOT_NUMBER_OR_DUP(code, code_length) != 1) {
+        while(not_number_or_dup(code, code_length) != 1) {
             for (int nbc_index = 0; nbc_index < code_length; nbc_index++) {
                 nbc = rand() % 9 + '0';
 
@@ -104,52 +79,7 @@ int main(int ac, char **av) {
         }
     }
 
-    printf("Will you find the secret code?\nPlease enter a valid guess\n");
+    mastermind_game(code, input, code_length, round, max_round);
 
-    while (round < max_round) {
-        int wplaced = 0;
-        int msplaced = 0;
-        int valid = 0;
-        ssize_t input_size = 0;
-
-        printf("---\nRound %d\n", round);
-
-        while(valid != 1) {
-            input_size = read(0, input, code_length);
-            if (input[input_size-1] == '\n') {
-                input_size--;
-            }
-            input[input_size] = '\0';
-
-            if (input[0] != '\0') {
-                if (NOT_NUMBER_OR_DUP(input, code_length) != 1) {
-                    printf("Wrong input!\n");
-                }
-                else {
-                    valid = 1;
-                }
-            }
-        }
-        
-        for (int wplaced_index = 0; wplaced_index < code_length; wplaced_index++) {
-            if (code[wplaced_index] == input[wplaced_index]) {
-                wplaced++;
-            }
-            for (int msplaced_index = 0; msplaced_index < code_length; msplaced_index++) {
-                if (code[msplaced_index] == input[wplaced_index] && code[wplaced_index] != input[wplaced_index]) {
-                    msplaced++;
-                }
-            }
-        }
-        if (wplaced == code_length) {
-            printf("Congratz! You did it!");
-            return 0;
-        }
-
-        printf("Well placed pieces: %d\nMisplaced pieces: %d\n", wplaced, msplaced);
-
-        round++;
-    }
-    printf("game over");
     return 0;
 }
