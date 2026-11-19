@@ -43,7 +43,7 @@ void mastermind_game(char *code, char *input, int code_length, int round, int ma
             input[input_size] = '\0';
 
             if (input[0] != '\0') {
-                if (NOT_NUMBER_OR_DUP(input, code_length) != 1) {
+                if (not_number_or_dup(input, code_length) != 1) {
                     printf("Wrong input!\n");
                 }
                 else {
